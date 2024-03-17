@@ -1,5 +1,5 @@
-import Email from 'email-templates';
-import path from 'path';
+import Email from "email-templates";
+import path from "path";
 
 const sender = new Email({
   message: {
@@ -15,9 +15,9 @@ const sender = new Email({
   },
   preview: false,
   views: {
-    root: path.join(__dirname, '../', 'templates'),
+    root: path.join(__dirname, "../", "templates"),
     options: {
-      extension: 'ejs',
+      extension: "ejs",
     },
   },
   juice: true,
