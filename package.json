@@ -18,9 +18,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
-      "yarn lint",
-      "yarn unify",
-      "yarn build"
+      "yarn lint"
     ]
   },
   "dependencies": {
