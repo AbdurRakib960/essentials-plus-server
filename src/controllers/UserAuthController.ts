@@ -5,12 +5,12 @@ import { prisma } from "../configs/database";
 import jwt from "jsonwebtoken";
 import AuthValidator from "../validators/AuthValidator";
 
-class AuthController {
+class UserAuthController {
   private JWT_SECRET = process.env.JWT_SECRET || "";
 
   private validators = new AuthValidator();
 
-  // @POST="/login" // ✔️ checked
+  // @POST="/user/login" // ✔️ checked
   loginUser: RequestHandler = async (req, res) => {
     // validate
     const value = await this.validators.login.parseAsync(req.body);
@@ -34,7 +34,7 @@ class AuthController {
     });
   };
 
-  // @POST="/signup" // ✔️ checked
+  // @POST="/user/signup" // ✔️ checked
   signupUser: RequestHandler = async (req, res) => {
     const value = await this.validators.signup.parseAsync(req.body);
 
@@ -85,7 +85,7 @@ class AuthController {
     });
   };
 
-  // @POST="/signup/verify" // ✔️ checked
+  // @POST="/user/signup/verify" // ✔️ checked
   verifyEmail: RequestHandler = async (req, res) => {
     const { token } = await this.validators.verifyEmail.parseAsync(req.body);
 
@@ -99,13 +99,13 @@ class AuthController {
 
     if (!user) throw new Error("Invalid link");
 
-    await prisma.user.update({ where: { id: Number(data.id) }, data: { verified: true } });
+    await prisma.user.update({ where: { id: data.id }, data: { verified: true } });
     await prisma.token.delete({ where: { token: findToken.token } });
 
     res.status(200).send({ message: "Email verified successfully" });
   };
 
-  // @POST="/password/forgot" // ✔️ checked
+  // @POST="/user/password/forgot" // ✔️ checked
   forgotPassword: RequestHandler = async (req, res) => {
     const { email } = await this.validators.forgotPassword.parseAsync(req.body);
 
@@ -154,7 +154,7 @@ class AuthController {
     });
   };
 
-  // @POST="/password/reset" // ✔️ checked
+  // @POST="/user/password/reset" // ✔️ checked
   resetPassword: RequestHandler = async (req, res) => {
     const { password, token } = await this.validators.resetPassword.parseAsync(req.body);
 
@@ -168,7 +168,7 @@ class AuthController {
     const data = Hash.decryptData(checkToken.data);
 
     // Update the user's password using the hashed password
-    await prisma.user.update({ where: { id: Number(data.id) }, data: { password: hashPassword } });
+    await prisma.user.update({ where: { id: data.id }, data: { password: hashPassword } });
     await prisma.token.delete({ where: { token: token } });
 
     // Respond with a success message
@@ -177,7 +177,7 @@ class AuthController {
     });
   };
 
-  // @POST="/email/resend" // ✔️ checked
+  // @POST="/user/email/resend" // ✔️ checked
   resendEmail: RequestHandler = async (req, res) => {
     const { token: t, type } = await this.validators.resendEmail.parseAsync(req.body);
 
@@ -191,7 +191,7 @@ class AuthController {
 
     const data = Hash.decryptData(token.data);
 
-    const user = await prisma.user.findUnique({ where: { id: Number(data.id) } });
+    const user = await prisma.user.findUnique({ where: { id: data.id } });
 
     if (!user) throw new Error("User not exist");
 
@@ -233,4 +233,4 @@ class AuthController {
   };
 }
 
-export default AuthController;
+export default UserAuthController;
