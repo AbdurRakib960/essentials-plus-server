@@ -1,4 +1,13 @@
-//🧩Don't Edit this file.✨Generated in Sun Mar 17 2024 12:54:30 GMT+0600 (Bangladesh Standard Time)✨
+//🧩Don't Edit this file.✨Generated in Mon Mar 18 2024 23:37:13 GMT+0600 (Bangladesh Standard Time)✨
+model Admin {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 generator client {
   provider = "prisma-client-js"
@@ -10,7 +19,7 @@ datasource db {
 }
 
 model Token {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(uuid())
   token     String    @unique
   data      String
   type      TokenType
@@ -24,7 +33,7 @@ enum TokenType {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   name      String
   email     String   @unique
   password  String
