@@ -1,15 +1,19 @@
 import { RequestHandler } from "express";
-import Validators from "../utils/Validators";
 import Hash from "../utils/Hash";
 import sender from "../utils/sender";
-import rswitch from "rswitch";
 import { prisma } from "../configs/database";
+import jwt from "jsonwebtoken";
+import AuthValidator from "../validators/AuthValidator";
 
 class AuthController {
+  private JWT_SECRET = process.env.JWT_SECRET || "";
+
+  private validators = new AuthValidator();
+
   // @POST="/login" // ✔️ checked
   loginUser: RequestHandler = async (req, res) => {
     // validate
-    const value = await Validators.loginUser.validateAsync(req.body);
+    const value = await this.validators.login.parseAsync(req.body);
 
     // check user
     const user = await prisma.user.findUnique({ where: { email: value.email } });
@@ -22,7 +26,7 @@ class AuthController {
     if (!user.verified) {
       throw new Error("Your account isn't verified yet, Please verify");
     }
-    const hash = Hash.encryptData({ id: user.id, name: user.name, email: user.email });
+    const hash = jwt.sign({ id: user.id, name: user.name, email: user.email }, this.JWT_SECRET);
 
     res.status(200).send({
       hash,
@@ -32,7 +36,7 @@ class AuthController {
 
   // @POST="/signup" // ✔️ checked
   signupUser: RequestHandler = async (req, res) => {
-    const value = await Validators.signupUser.validateAsync(req.body);
+    const value = await this.validators.signup.parseAsync(req.body);
 
     const user = await prisma.user.findUnique({ where: { email: value.email } });
 
@@ -83,7 +87,7 @@ class AuthController {
 
   // @POST="/signup/verify" // ✔️ checked
   verifyEmail: RequestHandler = async (req, res) => {
-    const { token } = await Validators.verifyEmail.validateAsync(req.body);
+    const { token } = await this.validators.verifyEmail.parseAsync(req.body);
 
     const findToken = await prisma.token.findUnique({ where: { token, type: "ConfirmEmail" } });
 
@@ -103,7 +107,7 @@ class AuthController {
 
   // @POST="/password/forgot" // ✔️ checked
   forgotPassword: RequestHandler = async (req, res) => {
-    const { email } = await Validators.forgotPassword.validateAsync(req.body);
+    const { email } = await this.validators.forgotPassword.parseAsync(req.body);
 
     const user = await prisma.user.findUnique({ where: { email } });
 
@@ -152,7 +156,7 @@ class AuthController {
 
   // @POST="/password/reset" // ✔️ checked
   resetPassword: RequestHandler = async (req, res) => {
-    const { password, token } = await Validators.resetPassword.validateAsync(req.body);
+    const { password, token } = await this.validators.resetPassword.parseAsync(req.body);
 
     // Check if the provided token exists in the database
     const checkToken = await prisma.token.findUnique({ where: { token, type: "ResetPassword" } });
@@ -175,7 +179,7 @@ class AuthController {
 
   // @POST="/email/resend" // ✔️ checked
   resendEmail: RequestHandler = async (req, res) => {
-    const { token: t, type } = await Validators.resendEmail.validateAsync(req.body);
+    const { token: t, type } = await this.validators.resendEmail.parseAsync(req.body);
 
     const token = await prisma.token.findUnique({ where: { token: t, type } });
 
@@ -204,20 +208,20 @@ class AuthController {
 
     if (!authToken) throw new Error("Token not valid");
 
-    const resendEmailLink = rswitch(type, {
+    const resendEmailLink = {
       ResetPassword: `${process.env.CLIENT_URL}/reset-password/${authToken.token}`,
       ConfirmEmail: `${process.env.CLIENT_URL}/signup/verify/${authToken.token}`,
-    });
+    }[type];
 
     // Resend email
     sender.send({
       message: {
         to: user.email,
       },
-      template: rswitch(type, {
+      template: {
         ResetPassword: "reset_password",
         ConfirmEmail: "confirm_email",
-      }),
+      }[type],
       locals: {
         url: resendEmailLink,
       },

@@ -1,5 +1,5 @@
 model Token {
-    id        Int       @id @default(autoincrement())
+    id        String    @id @default(uuid())
     token     String    @unique
     data      String
     type      TokenType
