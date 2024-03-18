@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --watch \"*.ts\" --exec \"node -r ts-node/register --env-file=.env\" ./src/index.ts",
+    "dev": "nodemon ./src/index.ts",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "build": "tsc && tscp",
@@ -53,6 +53,7 @@
     "prettier": "^3.2.5",
     "prisma": "^5.11.0",
     "prisma-multischema": "^1.1.4",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.2",
     "typescript-cp": "^0.1.9"
   }
