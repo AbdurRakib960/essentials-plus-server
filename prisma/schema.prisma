@@ -1,4 +1,4 @@
-//🧩Don't Edit this file.✨Generated in Mon Mar 18 2024 23:37:13 GMT+0600 (Bangladesh Standard Time)✨
+//🧩Don't Edit this file.✨Generated in Tue Mar 19 2024 11:23:15 GMT+0600 (Bangladesh Standard Time)✨
 model Admin {
   id        String   @id @default(uuid())
   name      String
