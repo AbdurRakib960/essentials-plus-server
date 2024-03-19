@@ -119,10 +119,6 @@ class AdminAuthController {
 
     if (!admin) throw new Error("Admin not exist");
 
-    if (type == "ConfirmEmail") {
-      if (admin.verified) throw new Error("Admin already verified");
-    }
-
     const isMinute = new Date().getTime() - new Date(token.updatedAt).getTime() < 60000;
     if (isMinute) {
       throw new Error("Can't resend email within one minute");

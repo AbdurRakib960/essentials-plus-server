@@ -10,7 +10,8 @@
     "build": "tsc && tscp",
     "prepare": "husky",
     "unify": "npx prisma-multischema && npx prisma generate",
-    "seed": "npx prisma db seed"
+    "seed": "npx prisma db seed",
+    "migrate:dev": "npx prisma migrate dev --name init"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
