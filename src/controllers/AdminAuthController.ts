@@ -23,9 +23,6 @@ class AdminAuthController {
     const isMatch = await Hash._matchPassword(value.password, admin.password);
     if (!isMatch) throw new Error("Invalid credential");
 
-    if (!admin.verified) {
-      throw new Error("Your account isn't verified yet, Please verify");
-    }
     const hash = jwt.sign({ id: admin.id, name: admin.name, email: admin.email }, this.JWT_SECRET);
 
     res.status(200).send({
@@ -41,8 +38,6 @@ class AdminAuthController {
     const admin = await prisma.admin.findUnique({ where: { email } });
 
     if (!admin) throw new Error("No admin found with this email");
-
-    if (!admin.verified) throw new Error("admin is not verified");
 
     const hash = Hash.encryptData({
       id: admin.id,

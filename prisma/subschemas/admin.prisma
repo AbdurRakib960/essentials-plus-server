@@ -3,7 +3,6 @@ model Admin {
     name      String
     email     String   @unique
     password  String
-    verified  Boolean  @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

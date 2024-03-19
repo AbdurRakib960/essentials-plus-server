@@ -9,7 +9,11 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "build": "tsc && tscp",
     "prepare": "husky",
-    "unify": "npx prisma-multischema && npx prisma generate"
+    "unify": "npx prisma-multischema && npx prisma generate",
+    "seed": "npx prisma db seed"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "husky": {
     "hooks": {

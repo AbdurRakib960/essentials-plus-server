@@ -19,10 +19,6 @@ router.post("/user/password/reset", userAuthController.resetPassword);
 
 router.post("/admin/login", adminAuthController.loginAdmin);
 
-router.post("/admin/signup", adminAuthController.signupAdmin);
-
-router.post("/admin/signup/verify", adminAuthController.verifyEmail);
-
 router.post("/admin/password/forgot", adminAuthController.forgotPassword);
 
 router.post("/admin/password/reset", adminAuthController.resetPassword);

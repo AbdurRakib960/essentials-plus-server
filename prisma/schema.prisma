@@ -1,10 +1,9 @@
-//🧩Don't Edit this file.✨Generated in Tue Mar 19 2024 11:23:15 GMT+0600 (Bangladesh Standard Time)✨
+//🧩Don't Edit this file.✨Generated in Tue Mar 19 2024 11:33:49 GMT+0600 (Bangladesh Standard Time)✨
 model Admin {
   id        String   @id @default(uuid())
   name      String
   email     String   @unique
   password  String
-  verified  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
