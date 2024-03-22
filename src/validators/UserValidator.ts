@@ -28,11 +28,16 @@ class UserValidator {
     status: z.nativeEnum(UserStatus).optional(),
   });
 
-  updatePassword = z.object({
-    currentPassword: this.required_string.min(8, this.errMsg.minimum_password_error),
-    newPassword: this.required_string.min(8, this.errMsg.minimum_password_error),
-    confirmPassword: this.required_string.min(8, this.errMsg.minimum_password_error),
-  });
+  updatePassword = z
+    .object({
+      currentPassword: this.required_string.min(8, this.errMsg.minimum_password_error),
+      newPassword: this.required_string.min(8, this.errMsg.minimum_password_error),
+      confirmPassword: this.required_string.min(8, this.errMsg.minimum_password_error),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: "Passwords don't match",
+      path: ["confirmPassword"],
+    });
 }
 
 export default UserValidator;

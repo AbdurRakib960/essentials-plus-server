@@ -22,11 +22,16 @@ class AuthValidator {
     email: this.required_string.email().trim().toLowerCase(),
   });
 
-  resetPassword = z.object({
-    token: this.required_string,
-    password: this.required_string.min(8, this.errMsg.minimum_password_error),
-    confirmPassword: this.required_string.min(8, this.errMsg.minimum_password_error),
-  });
+  resetPassword = z
+    .object({
+      token: this.required_string,
+      password: this.required_string.min(8, this.errMsg.minimum_password_error),
+      confirmPassword: this.required_string.min(8, this.errMsg.minimum_password_error),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords don't match",
+      path: ["confirmPassword"],
+    });
 
   resendEmail = z.object({
     token: this.required_string,
