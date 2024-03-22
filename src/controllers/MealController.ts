@@ -26,7 +26,7 @@ class MealController {
       data: {
         ...val,
         ingredients: {
-          create: val.ingredients?.map((v) => ({ ingredientId: v.id })),
+          connect: val.ingredients?.map((v) => ({ id: v.id })),
         },
         preparationMethod: {
           create: val.preparationMethod,
@@ -52,21 +52,47 @@ class MealController {
 
     const meal = await prisma.meal.update({
       where: { id },
-      data: {
-        ...value,
-        ingredients: {
-          create: ingredients?.map((v) => ({ ingredientId: v.id })),
+      data: Object.assign(
+        {
+          ...value,
+          ingredients: {
+            set: ingredients?.map((v) => ({ id: v.id })),
+          },
         },
-        tips: {
-          connectOrCreate: tips.map((v) => ({ where: { id: v?.id || "" }, create: v })),
+        tips?.length && {
+          tips: {
+            deleteMany: {},
+            create: tips?.map((v) => ({
+              label: v.label,
+            })),
+          },
         },
-        preparationMethod: {
-          connectOrCreate: preparationMethod.map((v) => ({ where: { id: v?.id || "" }, create: v })),
+        preparationMethod?.length && {
+          preparationMethod: {
+            deleteMany: {},
+            create: preparationMethod?.map((v) => ({
+              label: v.label,
+            })),
+          },
         },
+      ),
+      include: {
+        ingredients: true,
+        tips: true,
+        preparationMethod: true,
       },
     });
 
     res.status(200).send({ message: "Meal updated", meal });
+  };
+
+  // @DELETE="/:id"
+  deleteMeal: RequestHandler = async (req, res) => {
+    const id = await new BaseValidator().validateUUID.parseAsync(req.params.id);
+
+    const meal = await prisma.meal.delete({ where: { id } });
+
+    res.status(200).send({ message: "Meal deleted", meal });
   };
 
   // @GET="/ingregient"
@@ -91,14 +117,13 @@ class MealController {
     res.status(200).send({ message: "Ingredient updated", ingredient });
   };
 
-  // @DELETE="/:id"
-  deleteMeal: RequestHandler = async (req, res) => {
-    const { id } = req.params;
-    if (!id) throw new Error("Required id not found");
+  // @DELETE="/ingredient/:id"
+  deleteIngredient: RequestHandler = async (req, res) => {
+    const id = await new BaseValidator().validateUUID.parseAsync(req.params.id);
 
-    const meal = await prisma.meal.delete({ where: { id } });
+    const meal = await prisma.ingredient.delete({ where: { id } });
 
-    res.status(200).send({ message: "Meal deleted", meal });
+    res.status(200).send({ message: "Ingredient deleted", meal });
   };
 }
 

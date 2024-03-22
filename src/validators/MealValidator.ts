@@ -40,8 +40,8 @@ class MealValidator {
   updateMeal = this.meal.partial().extend({
     id: z.string().optional(),
     ingredients: z.array(this.ingredient.partial().extend({ id: z.string() })).optional(),
-    tips: z.array(this.tips.extend({ id: z.string().optional() })),
-    preparationMethod: z.array(this.preparationMethod.extend({ id: z.string().optional() })),
+    tips: z.array(this.tips.extend({ id: z.string().optional() })).optional(),
+    preparationMethod: z.array(this.preparationMethod.extend({ id: z.string().optional() })).optional(),
   });
 
   updateIngredient = this.ingredient.partial().extend({ id: z.string().optional() });

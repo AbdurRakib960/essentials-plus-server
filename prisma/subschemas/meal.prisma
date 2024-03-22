@@ -11,9 +11,9 @@ model Meal {
 
     image String
 
-    ingredients MealIngredient[]
-    createdAt   DateTime         @default(now())
-    updatedAt   DateTime         @updatedAt
+    ingredients Ingredient[]
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
 }
 
 enum MealType {
@@ -21,16 +21,6 @@ enum MealType {
     dinner
     lunch
     snacks
-}
-
-model MealIngredient {
-    id String @id @default(uuid())
-
-    mealId String
-    meal   Meal   @relation(fields: [mealId], references: [id])
-
-    ingredientId String
-    ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
 }
 
 model Ingredient {
@@ -44,7 +34,7 @@ model Ingredient {
     fats          Int
     fiber         Int
 
-    meals MealIngredient[]
+    meals Meal[]
 }
 
 model PreparationMethod {

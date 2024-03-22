@@ -15,6 +15,8 @@ router.put("/ingredient/:id", mealController.updateIngredient);
 
 router.delete("/:id", mealController.deleteMeal);
 
+router.delete("/ingredient/:id", mealController.deleteIngredient);
+
 router.get("/", mealController.getMeals);
 
 router.get("/ingredient", mealController.getIngredients);

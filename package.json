@@ -11,11 +11,11 @@
     "prepare": "husky",
     "unify": "npx prisma-multischema && npx prisma generate",
     "seed": "npx prisma db seed",
-    "seed:admin": "ts-node prisma/seed-admin.ts",
+    "seed:admin": "ts-node src/seed/seed-admin.ts",
     "migrate:dev": "npx prisma migrate dev --name init"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node src/seed/seed.ts"
   },
   "husky": {
     "hooks": {
