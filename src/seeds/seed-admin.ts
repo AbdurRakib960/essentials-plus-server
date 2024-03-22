@@ -21,6 +21,8 @@ async function CreateAdmin() {
       throw new Error("Admin already exist!, Chill");
     }
 
+    await prisma.admin.deleteMany();
+
     const hashPassword = await bcrypt.hash(adminData[2], 10);
 
     await prisma.admin.create({ data: { name: adminData[0], email: adminData[1], password: hashPassword } });

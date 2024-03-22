@@ -23,7 +23,7 @@ class AdminAuthController {
     const isMatch = await Hash._matchPassword(value.password, admin.password);
     if (!isMatch) throw new Error("Invalid credential");
 
-    const hash = jwt.sign({ id: admin.id, name: admin.name, email: admin.email }, this.JWT_SECRET);
+    const hash = jwt.sign({ id: admin.id, name: admin.name, email: admin.email, type: "ADMIN" }, this.JWT_SECRET);
 
     res.status(200).send({
       hash,

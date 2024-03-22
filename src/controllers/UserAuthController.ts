@@ -26,7 +26,7 @@ class UserAuthController {
     if (!user.verified) {
       throw new Error("Your account isn't verified yet, Please verify");
     }
-    const hash = jwt.sign({ id: user.id, name: user.name, email: user.email }, this.JWT_SECRET);
+    const hash = jwt.sign({ id: user.id, name: user.name, email: user.email, type: "USER" }, this.JWT_SECRET);
 
     res.status(200).send({
       hash,
