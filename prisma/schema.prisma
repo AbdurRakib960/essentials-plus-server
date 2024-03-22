@@ -1,4 +1,4 @@
-//🧩Don't Edit this file.✨Generated in Tue Mar 19 2024 11:33:49 GMT+0600 (Bangladesh Standard Time)✨
+//🧩Don't Edit this file.✨Generated in Fri Mar 22 2024 22:48:34 GMT+0600 (Bangladesh Standard Time)✨
 model Admin {
   id        String   @id @default(uuid())
   name      String
@@ -17,6 +17,80 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Meal {
+  id                String              @id @default(uuid())
+  meal              MealType
+  mealNumber        String // @Note: is it number or string?
+  mealName          String
+  preparationMethod PreparationMethod[]
+  cookingTime       String
+  tips              Tips[]
+
+  image String
+
+  ingredients MealIngredient[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+enum MealType {
+  breakfast
+  dinner
+  lunch
+  snacks
+}
+
+model MealIngredient {
+  id String @id @default(uuid())
+
+  mealId String
+  meal   Meal   @relation(fields: [mealId], references: [id])
+
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+}
+
+model Ingredient {
+  id            String @id @default(uuid())
+  name          String
+  quantity      Int
+  unit          String
+  kcal          Int
+  proteins      Int
+  carbohydrates Int
+  fats          Int
+  fiber         Int
+
+  meals MealIngredient[]
+}
+
+model PreparationMethod {
+  id String @id @default(uuid())
+
+  label String
+
+  // relation
+  mealId String
+  meal   Meal   @relation(fields: [mealId], references: [id])
+}
+
+model Tips {
+  id String @id @default(uuid())
+
+  label String
+
+  // relation
+  mealId String
+  meal   Meal   @relation(fields: [mealId], references: [id])
+}
+
+model Plan {
+  id String @id @default(uuid())
+
+  days  Int
+  meals Int
+}
+
 model Token {
   id        String    @id @default(uuid())
   token     String    @unique
@@ -32,11 +106,46 @@ enum TokenType {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
+  id            String  @id @default(uuid())
+  // personal info
+  name          String
+  profile       String? // profile image
+  surname       String?
+  age           Int?
+  gender        Gender?
+  weight        Int?
+  height        Int?
+  activityLevel String?
+  goal          String?
+  kcal          Int?
+
+  // address info
+  address String?
+  nr      String?
+  city    String?
+  zipCode String?
+
+  // credentials
+  email    String  @unique
+  mobile   String?
+  password String
+
+  status UserStatus @default(active)
+
+  customer String? // stripe customer id
+
   verified  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum Gender {
+  male
+  female
+  others
+}
+
+enum UserStatus {
+  active
+  blocked
 }

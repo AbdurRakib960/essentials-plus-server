@@ -1,9 +1,9 @@
 import z from "zod";
-import ErrorMessage from "../utils/ErrorMessage";
 import { TokenType } from "@prisma/client";
+import ErrorConfig from "../utils/ErrorConfig";
 
 class AuthValidator {
-  private errMsg: ErrorMessage = new ErrorMessage();
+  private errMsg = new ErrorConfig.ErrorMessage();
 
   private required_string = z.string(this.errMsg.default_string_error).min(1, this.errMsg.minimum_error);
 

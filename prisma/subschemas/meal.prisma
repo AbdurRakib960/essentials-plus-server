@@ -1,0 +1,68 @@
+import { Ingredient, Meal } from "..\schema"
+
+model Meal {
+    id                String              @id @default(uuid())
+    meal              MealType
+    mealNumber        String // @Note: is it number or string?
+    mealName          String
+    preparationMethod PreparationMethod[]
+    cookingTime       String
+    tips              Tips[]
+
+    image String
+
+    ingredients MealIngredient[]
+    createdAt   DateTime         @default(now())
+    updatedAt   DateTime         @updatedAt
+}
+
+enum MealType {
+    breakfast
+    dinner
+    lunch
+    snacks
+}
+
+model MealIngredient {
+    id String @id @default(uuid())
+
+    mealId String
+    meal   Meal   @relation(fields: [mealId], references: [id])
+
+    ingredientId String
+    ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+}
+
+model Ingredient {
+    id            String @id @default(uuid())
+    name          String
+    quantity      Int
+    unit          String
+    kcal          Int
+    proteins      Int
+    carbohydrates Int
+    fats          Int
+    fiber         Int
+
+    meals MealIngredient[]
+}
+
+model PreparationMethod {
+    id String @id @default(uuid())
+
+    label String
+
+    // relation
+    mealId String
+    meal   Meal   @relation(fields: [mealId], references: [id])
+}
+
+model Tips {
+    id String @id @default(uuid())
+
+    label String
+
+    // relation
+    mealId String
+    meal   Meal   @relation(fields: [mealId], references: [id])
+}

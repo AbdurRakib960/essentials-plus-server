@@ -1,9 +1,44 @@
 model User {
-    id        String   @id @default(uuid())
-    name      String
-    email     String   @unique
-    password  String
+    id            String  @id @default(uuid())
+    // personal info
+    name          String
+    profile       String? // profile image
+    surname       String?
+    age           Int?
+    gender        Gender?
+    weight        Int?
+    height        Int?
+    activityLevel String?
+    goal          String?
+    kcal          Int?
+
+    // address info
+    address String?
+    nr      String?
+    city    String?
+    zipCode String?
+
+    // credentials
+    email    String  @unique
+    mobile   String?
+    password String
+
+    status UserStatus @default(active)
+
+    customer String? // stripe customer id
+
     verified  Boolean  @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+enum Gender {
+    male
+    female
+    others
+}
+
+enum UserStatus {
+    active
+    blocked
 }
