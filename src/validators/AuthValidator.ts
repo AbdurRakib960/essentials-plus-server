@@ -28,7 +28,7 @@ class AuthValidator {
       password: this.required_string.min(8, this.errMsg.minimum_password_error),
       confirmPassword: this.required_string.min(8, this.errMsg.minimum_password_error),
     })
-    .refine((data) => data.password === data.confirmPassword, {
+    .refine((data) => data.password !== data.confirmPassword, {
       message: "Passwords don't match",
       path: ["confirmPassword"],
     });
