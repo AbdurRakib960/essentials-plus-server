@@ -1,3 +1,5 @@
+import { Plan } from "./plan"
+
 model User {
     id            String  @id @default(uuid())
     // personal info
@@ -26,6 +28,8 @@ model User {
     status UserStatus @default(active)
 
     customer String? // stripe customer id
+
+    plan Plan?
 
     verified  Boolean  @default(false)
     createdAt DateTime @default(now())

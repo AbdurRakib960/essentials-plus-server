@@ -1,4 +1,5 @@
 import { Ingredient, Meal } from "..\schema"
+import { MealsForTheWeek } from "plan"
 
 model Meal {
     id                String              @id @default(uuid())
@@ -12,8 +13,10 @@ model Meal {
     image String
 
     ingredients Ingredient[]
-    createdAt   DateTime     @default(now())
-    updatedAt   DateTime     @updatedAt
+
+    mealsForTheWeek MealsForTheWeek[]
+    createdAt       DateTime          @default(now())
+    updatedAt       DateTime          @updatedAt
 }
 
 enum MealType {

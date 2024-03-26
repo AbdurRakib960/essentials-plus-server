@@ -1,4 +1,4 @@
-//🧩Don't Edit this file.✨Generated in Fri Mar 22 2024 23:29:50 GMT+0600 (Bangladesh Standard Time)✨
+//🧩Don't Edit this file.✨Generated in Mon Mar 25 2024 03:43:00 GMT+0600 (Bangladesh Standard Time)✨
 model Admin {
   id        String   @id @default(uuid())
   name      String
@@ -29,8 +29,10 @@ model Meal {
   image String
 
   ingredients Ingredient[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+
+  mealsForTheWeek MealsForTheWeek[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 }
 
 enum MealType {
@@ -77,8 +79,28 @@ model Tips {
 model Plan {
   id String @id @default(uuid())
 
-  days  Int
-  meals Int
+  numberOfDays Int
+  mealsPerDay  Int
+  totalKcal    Int
+
+  price Float
+
+  mealsForTheWeek MealsForTheWeek[]
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MealsForTheWeek {
+  id    String @id @default(uuid())
+  day   Int
+  meals Meal[]
+
+  planId String
+  plan   Plan   @relation(fields: [planId], references: [id])
 }
 
 model Token {
@@ -123,6 +145,8 @@ model User {
   status UserStatus @default(active)
 
   customer String? // stripe customer id
+
+  plan Plan?
 
   verified  Boolean  @default(false)
   createdAt DateTime @default(now())
